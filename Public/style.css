@@ -1,0 +1,31 @@
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Arial, sans-serif; }
+body { background: #f8fafc; color: #1e293b; line-height: 1.6; }
+.navbar { background: #0f172a; color: white; padding: 15px 0; }
+.nav-content { display: flex; justify-content: space-between; align-items: center; max-width: 1100px; margin: 0 auto; padding: 0 20px; }
+.logo { color: white; text-decoration: none; font-weight: bold; font-size: 18px; display: flex; gap: 8px; align-items: center; }
+.logo-mark { background: #2563eb; color: white; padding: 5px 10px; border-radius: 6px; }
+.container { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
+section { padding: 50px 0; }
+h1 { font-size: 42px; color: #0f172a; margin: 15px 0; line-height: 1.2; }
+.badge { color: #2563eb; font-weight: 700; letter-spacing: 1px; font-size: 14px; }
+.application { background: white; border-radius: 16px; padding: 30px; margin-top: 30px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); }
+.how-it-works { background: #0f172a; color: white; border-radius: 16px; padding: 30px; margin-top: 20px; }
+.how-it-works h2 { color: white; }
+.step { display: flex; gap: 15px; margin: 20px 0; }
+.step-number { background: #2563eb; color: white; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; flex-shrink: 0; }
+.form-box { background: white; padding: 25px; border-radius: 12px; margin-top: 20px; }
+input, select { width: 100%; padding: 12px; margin: 8px 0 15px 0; border: 1px solid #cbd5e1; border-radius: 8px; }
+button { background: #2563eb; color: white; border: none; padding: 14px 28px; border-radius: 8px; font-weight: bold; cursor: pointer; width: 100%; font-size: 16px; }
+button:hover { background: #1d4ed8; }
+ul { list-style: none; margin: 15px 0; }
+ul li { margin: 6px 0; }
+ul li::before { content: "✓ "; color: #2563eb; font-weight: bold; }
+/* MAKE ALL * RED AND COMPULSORY LOOK */
+.req {
+  color: #ff0000 !important;
+  font-weight: bold;
+  font-size: 16px;
+}
+label span.req {
+  color: #ff0000 !important;
+}

