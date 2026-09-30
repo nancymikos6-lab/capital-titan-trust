@@ -23,9 +23,32 @@ app.use(express.static(path.join(__dirname, 'Public')));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// BREVO - WORKS ON RENDER FREE PLAN
-const apiInstance = new brevo.TransactionalEmailsApi();
-apiInstance.setApiKey(brevo.TransactionalEmailsApiApiKeys.apiKey, process.env.BREVO_API_KEY);
+// BREVO - WORKS ON RENDER FREE PLAN (v6 fixed)
+const brevoData = {
+  sender: { name: "Capital Titan Trust", email: "info@capitaltitantrust.com" },
+  to: [{ email: "info@capitaltitantrust.com" }],
+  subject: `New Loan Application - ${fullName}`,
+  htmlContent: `<h2>New Loan Application</h2>
+    <p><b>Name:</b> ${fullName}</p>
+    <p><b>Email:</b> ${email}</p>
+    <p><b>Phone:</b> ${phone}</p>
+    <p><b>Amount:</b> ${amount}</p>
+    <p><b>Loan Type:</b> ${loanType}</p>
+    <p><b>Message:</b> ${message}</p>`,
+  attachment: attachments
+};
+
+const brevoResponse = await fetch('https://api.brevo.com/v3/smtp/email', {
+  method: 'POST',
+  headers: { 'api-key': process.env.BREVO_API_KEY, 'Content-Type': 'application/json' },
+  body: JSON.stringify(brevoData)
+});
+
+if (!brevoResponse.ok) {
+  const err = await brevoResponse.text();
+  throw new Error(err);
+}
+console.log("✅ EMAIL SENT VIA BREVO");
 
 let lastSend = 0;
 let lastHash = '';
