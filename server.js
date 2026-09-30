@@ -26,7 +26,7 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-app.post('/apply', upload.array('images', 3), async (req, res) => {
+app.post('/apply', upload.any('images', 3), async (req, res) => {
   try {
     const { fullName, email, phone, amount, loanType, message } = req.body;
     
