@@ -32,11 +32,10 @@ app.post('/apply', upload.array('images', 3), async (req, res) => {
     
     const attachments = [];
     if (req.files) {
-      for (const file of req.files) {
-        const content = fs.readFileSync(file.path).toString('base64');
-        attachments.push({ name: file.originalname, content: content });
-      }
-    }
+  for (const file of req.files) {
+    try { if(fs.existsSync(file.path)) fs.unlinkSync(file.path); } catch(e){}
+  }
+}
 
     // BREVO - WORKS ON RENDER FREE PLAN (v6 fixed)
     const brevoData = {
