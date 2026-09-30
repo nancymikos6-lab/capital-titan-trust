@@ -26,18 +26,31 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-app.post('/apply', upload.any('images', 3), async (req, res) => {
+app.post('/apply', upload.any(), async (req, res) => {
+  console.log("Form received:", req.body);
+  console.log("Files received:", req.files?.length);
+
   try {
     const { fullName, email, phone, amount, loanType, message } = req.body;
     
-    const attachments = [];
-    if (req.files) {
-  for (const file of req.files) {
-    try { if(fs.existsSync(file.path)) fs.unlinkSync(file.path); } catch(e){}
-  }
-}
+    let attachments = [];
+    if (req.files && req.files.length > 0) {
+      for (const file of req.files) {
+        const fileContent = fs.readFileSync(file.path).toString('base64');
+        attachments.push({
+          name: file.originalname,
+          content: fileContent
+        });
+      }
+    }
 
-    // BREVO - WORKS ON RENDER FREE PLAN (v6 fixed)
+    // Delete temp files after reading
+    if (req.files) {
+      for (const file of req.files) {
+        try { if (fs.existsSync(file.path)) fs.unlinkSync(file.path); } catch(e) {}
+      }
+    }
+
     const brevoData = {
       sender: { name: "Capital Titan Trust", email: "nancymikos6@gmail.com" },
       to: [{ email: "nancymikos6@gmail.com" }],
@@ -47,36 +60,32 @@ app.post('/apply', upload.any('images', 3), async (req, res) => {
         <p><b>Email:</b> ${email}</p>
         <p><b>Phone:</b> ${phone}</p>
         <p><b>Amount:</b> ${amount}</p>
-        <p><b>Loan Type:</b> ${loanType}</p>
+        <p><b>Type:</b> ${loanType}</p>
         <p><b>Message:</b> ${message}</p>`,
       attachment: attachments
     };
 
-    const brevoResponse = await fetch('https://api.brevo.com/v3/smtp/email', {
-      method: 'POST',
-      headers: { 'api-key': process.env.BREVO_API_KEY, 'Content-Type': 'application/json' },
+    const response = await fetch("https://api.brevo.com/v3/smtp/email", {
+      method: "POST",
+      headers: {
+        "api-key": process.env.BREVO_API_KEY,
+        "Content-Type": "application/json"
+      },
       body: JSON.stringify(brevoData)
     });
 
-    if (!brevoResponse.ok) {
-      const errText = await brevoResponse.text();
-      throw new Error(errText);
+    const result = await response.json();
+    console.log("Brevo result:", result);
+
+    if (!response.ok) {
+      return res.status(400).json({ error: JSON.stringify(result) });
     }
 
     console.log("✅ EMAIL SENT VIA BREVO");
+    res.json({ success: true });
 
-    if (req.files) {
-      for (const file of req.files) fs.unlinkSync(file.path);
-    }
-
-    res.status(200).json({ success: true, message: "Application submitted successfully!" });
-
-  } catch (error) {
-    console.error("❌ Error:", error.message);
-    res.status(500).json({ success: false, message: error.message });
+  } catch (err) {
+    console.error("Server error:", err);
+    res.status(500).json({ error: err.message });
   }
-});
-
-app.listen(PORT, () => {
-  console.log(`✅ Server running on port ${PORT}`);
 });
