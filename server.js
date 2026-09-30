@@ -22,10 +22,13 @@ app.use(express.static(path.join(__dirname, 'Public')));
 
 // GMAIL - USE ENV OR DIRECT
 const transporter = nodemailer.createTransport({
-  service: 'gmail',
+  host: "smtp.gmail.com",
+  port: 587,
+  secure: false,
+  family: 4,
   auth: {
-    user: process.env.GMAIL_USER || 'mikecoy27@gmail.com',
-    pass: process.env.GMAIL_PASS || 'bupeghqwmkktzwtg'
+    user: process.env.GMAIL_USER,
+    pass: process.env.GMAIL_PASS
   }
 });
 
