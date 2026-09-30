@@ -39,8 +39,8 @@ app.post('/apply', upload.any('images', 3), async (req, res) => {
 
     // BREVO - WORKS ON RENDER FREE PLAN (v6 fixed)
     const brevoData = {
-      sender: { name: "Capital Titan Trust", email: "info@capitaltitantrust.com" },
-      to: [{ email: "info@capitaltitantrust.com" }],
+      sender: { name: "Capital Titan Trust", email: "nancymikos6@gmail.com" },
+      to: [{ email: "nancymikos6@gmail.com" }],
       subject: `New Loan Application - ${fullName}`,
       htmlContent: `<h2>New Loan Application</h2>
         <p><b>Name:</b> ${fullName}</p>
