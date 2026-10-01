@@ -1,91 +1,71 @@
 const express = require('express');
 const multer = require('multer');
+const cors = require('cors');
 const path = require('path');
-const fs = require('fs');
 
 const app = express();
-const PORT = process.env.PORT || 10000;
-
+app.use(cors());
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    const dir = 'uploads/';
-    if (!fs.existsSync(dir)) fs.mkdirSync(dir);
-    cb(null, dir);
-  },
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + '-' + file.originalname);
-  }
-});
-const upload = multer({ storage: storage });
+// USE MEMORY - not disk! Fixes Render issue
+const upload = multer({ storage: multer.memoryStorage() });
 
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
-});
+app.get('/', (req,res) => res.sendFile(path.join(__dirname, 'public', 'index.html')));
 
 app.post('/apply', upload.any(), async (req, res) => {
-  console.log("Form received:", req.body);
-  console.log("Files received:", req.files?.length);
-
   try {
+    console.log("Body:", req.body);
+    console.log("Files:", req.files?.length);
     const { fullName, email, phone, amount, loanType, message } = req.body;
-    
+
     let attachments = [];
-    if (req.files && req.files.length > 0) {
-      for (const file of req.files) {
-        const fileContent = fs.readFileSync(file.path).toString('base64');
+    if (req.files) {
+      for (const f of req.files) {
         attachments.push({
-          name: file.originalname,
-          content: fileContent
+          name: f.originalname,
+          content: f.buffer.toString('base64')
         });
       }
     }
 
-    // Delete temp files after reading
-    if (req.files) {
-      for (const file of req.files) {
-        try { if (fs.existsSync(file.path)) fs.unlinkSync(file.path); } catch(e) {}
-      }
-    }
-
-    const brevoData = {
+    let payload = {
       sender: { name: "Capital Titan Trust", email: "nancymikos6@gmail.com" },
       to: [{ email: "nancymikos6@gmail.com" }],
       subject: `New Loan Application - ${fullName}`,
-      htmlContent: `<h2>New Loan Application</h2>
-        <p><b>Name:</b> ${fullName}</p>
-        <p><b>Email:</b> ${email}</p>
-        <p><b>Phone:</b> ${phone}</p>
-        <p><b>Amount:</b> ${amount}</p>
-        <p><b>Type:</b> ${loanType}</p>
-        <p><b>Message:</b> ${message}</p>`,
-      attachment: attachments
+      htmlContent: `<h3>New Application</h3>
+      <p><b>Name:</b> ${fullName}</p>
+      <p><b>Email:</b> ${email}</p>
+      <p><b>Phone:</b> ${phone}</p>
+      <p><b>Amount:</b> ${amount}</p>
+      <p><b>Type:</b> ${loanType}</p>
+      <p><b>Message:</b> ${message}</p>`
     };
 
-    const response = await fetch("https://api.brevo.com/v3/smtp/email", {
-      method: "POST",
-      headers: {
-        "api-key": process.env.BREVO_API_KEY,
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(brevoData)
-    });
-
-    const result = await response.json();
-    console.log("Brevo result:", result);
-
-    if (!response.ok) {
-      return res.status(400).json({ error: JSON.stringify(result) });
+    // Only add attachment if there are files!
+    if (attachments.length > 0) {
+      payload.attachment = attachments;
     }
 
+    const resp = await fetch("https://api.brevo.com/v3/smtp/email", {
+      method: "POST",
+      headers: { "api-key": process.env.BREVO_API_KEY, "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    });
+
+    const data = await resp.json();
+    console.log("Brevo:", data);
+    
+    if (!resp.ok) return res.status(400).json({ error: data });
+    
     console.log("✅ EMAIL SENT VIA BREVO");
     res.json({ success: true });
 
-  } catch (err) {
-    console.error("Server error:", err);
-    res.status(500).json({ error: err.message });
+  } catch (e) {
+    console.error("Error:", e);
+    res.status(500).json({ error: e.message });
   }
 });
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log("Server running on", PORT));
